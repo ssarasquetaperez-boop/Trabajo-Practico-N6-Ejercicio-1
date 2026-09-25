@@ -66,7 +66,22 @@ public class Escritorio extends javax.swing.JFrame {
 
         lblPrecio.setText("Precio ($)");
 
+        cmbCategoria.addPropertyChangeListener(this::cmbCategoriaPropertyChange);
+
+        txtNombre.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNombreFocusLost(evt);
+            }
+        });
+
+        txtPrecio.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPrecioFocusLost(evt);
+            }
+        });
+
         btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(this::btnAgregarActionPerformed);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -160,6 +175,48 @@ public class Escritorio extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtNombreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusLost
+        // TODO add your handling code here:
+        if (txtNombre.getText().length() == 0) {
+            JOptionPane.showMessageDialog(this, "Debe tener un nombre");
+            txtNombre.requestFocus();
+        }
+    }//GEN-LAST:event_txtNombreFocusLost
+
+    private void txtPrecioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioFocusLost
+        // TODO add your handling code here:
+        try {
+            String precio = txtPrecio.getText();
+            double pre = Double.parseDouble(precio);
+        } catch (NumberFormatException x) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar un precio valido");
+            txtPrecio.requestFocus();
+        }
+    }//GEN-LAST:event_txtPrecioFocusLost
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        // TODO add your handling code here:
+        if (txtNombre.getText().trim().isEmpty() || txtPrecio.getText().trim().isEmpty() || cmbCategoria.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "Tines que llenar todos los campos");
+            return;
+        }
+
+        Producto pn = new Producto();
+
+        pn.setNombre(txtNombre.getText());
+        pn.setPrecio(Double.parseDouble(txtPrecio.getText()));
+        pn.setCategoria((Categoria) cmbCategoria.getSelectedItem());
+
+        pd.guardarProducto(pn);
+        limpiarCampos();
+        modelo.setRowCount(0);
+        llenarTabla();
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void cmbCategoriaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cmbCategoriaPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbCategoriaPropertyChange
+
     /**
      * @param args the command line arguments
      */
@@ -188,7 +245,7 @@ public class Escritorio extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
-    private javax.swing.JComboBox<String> cmbCategoria;
+    private javax.swing.JComboBox<Categoria> cmbCategoria;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
