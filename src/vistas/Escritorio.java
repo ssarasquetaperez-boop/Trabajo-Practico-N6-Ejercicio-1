@@ -1,5 +1,13 @@
 package vistas;
 
+import data.CategoriaData;
+import data.ProductoData;
+import entidades.Categoria;
+import entidades.Producto;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -11,6 +19,10 @@ package vistas;
  */
 public class Escritorio extends javax.swing.JFrame {
 
+    private CategoriaData cd;
+    private ProductoData pd;
+    private DefaultTableModel modelo;
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Escritorio.class.getName());
 
     /**
@@ -18,7 +30,11 @@ public class Escritorio extends javax.swing.JFrame {
      */
     public Escritorio() {
         initComponents();
-
+        cd = new CategoriaData();
+        pd = new ProductoData();
+        llenarCmb();
+        modelo = new DefaultTableModel();
+        armarCabezera();
     }
 
     /**
@@ -169,6 +185,7 @@ public class Escritorio extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new Escritorio().setVisible(true));
     }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JComboBox<String> cmbCategoria;
@@ -182,4 +199,32 @@ public class Escritorio extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
+
+    private void llenarCmb() {
+        for (Categoria c : cd.obtenerCategoria()) {
+            cmbCategoria.addItem(c);
+            cmbCategoria.setSelectedIndex(-1);
+        }
+    }
+
+    private void limpiarCampos() {
+        txtNombre.setText("");
+        txtPrecio.setText("");
+        cmbCategoria.setSelectedIndex(-1);
+    }
+
+    private void armarCabezera() {
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Categoria");
+        modelo.addColumn("Precio");
+        jTable1.setModel(modelo);
+    }
+
+    private void llenarTabla() {
+        for (Producto p : pd.obtenerProductos()) {
+            modelo.addRow(new Object[]{p.getNombre(), p.getCategoria(), p.getPrecio()});
+
+        }
+    }
+
 }
